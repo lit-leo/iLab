@@ -1,6 +1,26 @@
 #include <stdio.h>
 #include <math.h>
 
+double Lin_root ( double b , double c ){
+
+    double root;
+
+    if ( !b * !c ) {
+        printf("Quantity of roots are infinite");
+    }
+    else {
+        if ( b == 0 ) {
+            printf("No roots \n");
+        }
+
+        else {
+            root = - c / b ;
+            printf("%lg\n", root);
+
+        };
+    };
+}
+
 double Quad_root_hi ( double a , double b , double c) { //calculates a value of a higher root
     double root =( - b + sqrt ( b * b - 4 * a *c) )/ ( 2 * a );
     return root ;
@@ -22,7 +42,7 @@ int Roots_corectness_chk( double a , double b , double c) { //checks if the equa
 
     if ( a == 0 ) {
         printf("Expected quadratic equalization, met linear\n");
-        return -1;
+        return 1;
     };
 
     if ( Discriminant < 0 ) {
@@ -48,7 +68,7 @@ double Quadratic_roots_display ( double a , double b , double c) { //shows on di
     };
 
     if ( a == 0 ) {
-        return -1;
+        return Lin_root ( b , c );
     };
 
     if ( Discriminant == 0 ) {
