@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <time.h>
+#include <stdlib.h>
 //#include <unistd.h>
+#define SIZE 150000
+
+void input( int* a ){
+    int i = 0;
+
+    srand(time(NULL)-98);
+    for ( i = 0 ; i <= SIZE - 1 ; i++){
+        a[i] = rand() ;
+    }
+    }
 
 void out( int* a, int s, int e ){
     int i;
@@ -53,14 +64,7 @@ void bsort( int* a , int leng ){
     }
 }
 
-void input( int* a ){
-    int i;
-    for ( i = 0 ; i <= 9999 ; i++){
-        a[i] = 5 * i ;
-    }
-    }
-
-void qsort( int* array , int first , int last){
+/*void qsort( int* array , int first , int last){
 
     int i = first, j = last, base = array[(first + last) /2];
     out(array, first, last);
@@ -102,12 +106,11 @@ void qsort( int* array , int first , int last){
     {
         printf("call %d-%d\n",first,i);
         qsort(array , first , i);
-    } */
+    }
 }
-//virtualbox
+virtualbox */
 
-int insort(int *Array, int ArraySize)
-{
+int insort(int *Array, int ArraySize){
    double dKey;
    int i, j;
    for(i=1; i<ArraySize; i++)
@@ -127,23 +130,20 @@ int insort(int *Array, int ArraySize)
 int main() {
 
     long long int clk0 , clk1 , clk2;
-    int array[10000];
-    int array2[10000];
+    int array[SIZE], array2[SIZE];
+
     //printf("%lld\n",time(NULL));
-    printf("%lld\n",time(NULL));
-    input( array );
-    input( array2 );
-    out( array, 0,25 );
+    input(array);
+    input(array2);
     clk0 = time(NULL);
-    insort( array ,  25 );
-    getchar();
-    out( array, 0,9 );
+    insort( array2 ,  SIZE);
     clk1 = time(NULL);
-    qusort( array , 1 , 9);
+    qusort( array , 1 , SIZE - 1);
     clk2 = time(NULL);
-    out( array2, 0, 25 );
-    printf("Time for InSort = %lld \n", clk1 - clk0);
-    printf("Time for QuSort = %lld \n", clk2 - clk1);
+    //printf("\n%lld\n%lld\n%lld\n", clk0, clk1, clk2);
+    printf("Time for InSort = %lg \n",difftime(clk1, clk0));
+    printf("Time for QuSort = %lld \n",difftime(clk2, clk1));
+    //out( array, 0, SIZE);
+    //out( array2, 0, SIZE);
     return 0;
     }
-
