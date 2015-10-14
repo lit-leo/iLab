@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#define DISCRIMINANT(x,y,z) (y*y - 4*x*z)
-#define HI_ROOT(a,b,c) ( -b + sqrt (DISCRIMINANT(a,b,c)) )/(2*a)
-#define LO_ROOT(a,b,c) ( -b - sqrt (DISCRIMINANT(a,b,c)) )/(2*a)
+#define DISCRIMINANT(x,y,z) ((y)*(y) - 4*(x)*(z))
+#define HI_ROOT(a,b,c) ( -(b) + sqrt(DISCRIMINANT(a,b,c)) )/(2*(a))
+#define LO_ROOT(a,b,c) ( -(b) - sqrt(DISCRIMINANT(a,b,c)) )/(2*(a))
 
 struct root {
     double fir;
@@ -110,14 +110,17 @@ int Roots_count( double a , double b , double c) { //counts quantity of roots, r
 
 }
 */
+
 int main() {
     double a , b , c ;
     int d;
+    struct root solve;
 
     if ( ( d = scanf("%lg %lg %lg", &a,&b,&c) ) == 3 ) {
         //Quadratic_roots_display(a,b,c);
-        printf("\n%lg\n",Quad_root(a,b,c).fir);
-        printf("\n%lg\n",Quad_root(a,b,c).sec);
+        solve = Quad_root(a,b,c);
+        printf("\n%lg\n",solve.fir);
+        printf("\n%lg\n",solve.sec);
     }
     else {
         printf("Unexpected input data\n");
