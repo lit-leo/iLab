@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 //#include <unistd.h>
-#define SIZE 150000
+#define SIZE 120000
 
 void input( int* a ){
     int i = 0;
@@ -131,10 +131,12 @@ int main() {
 
     long long int clk0 , clk1 , clk2;
     int array[SIZE], array2[SIZE];
-
+    int i = 0;
     //printf("%lld\n",time(NULL));
+
     input(array);
-    input(array2);
+    for (i = 0; i < SIZE ; i++)
+        array2[i] = array[i];
     clk0 = time(NULL);
     insort( array2 ,  SIZE);
     clk1 = time(NULL);
@@ -144,6 +146,7 @@ int main() {
     printf("Time for InSort = %lg \n",difftime(clk1, clk0));
     printf("Time for QuSort = %lld \n",difftime(clk2, clk1));
     //out( array, 0, SIZE);
+    //printf("\n");
     //out( array2, 0, SIZE);
     return 0;
     }
