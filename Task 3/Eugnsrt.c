@@ -69,7 +69,7 @@ int main()
 	for ( i = 0 ; i < STRQTY ; i++)
     {
 		fputs( storage[i] , stdout);
-    }
+    };
 
     for ( i = 0 ; i < STRQTY ; i++)
     {
