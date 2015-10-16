@@ -2,12 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define STRQTY 806
 #define STRLNG 90
 
 int cmp(char *a,char *b);
 void swp(char **a,char **b);
-
+int qtystr(FILE *f);
 
 int cmp(char *a,char *b)
 {
@@ -39,39 +38,72 @@ void swp(char **a,char **b)
 	*b = temp;
 };
 
+int qtystr(FILE *f)
+{
+    int leng = 0;
+    char s[256];
+
+    while (fgets( s , 256 , f) != NULL)
+       {
+            ++leng;
+        };
+        rewind(f);
+    return leng;
+}
 
 int main()
 {
-    int i = 0 , j = 0;
-    char buffer[STRLNG] = {};
+    int i = 0 , j = 0, leng = 0;
+    char buffer[STRLNG] = {}, filebuffer[64] = {}, filename[64] = {};
     char **storage = NULL;
+    FILE *filein = NULL, *fileout = NULL;
 
-    storage = (char **)malloc(sizeof(char *) * STRQTY);
+    fgets(filebuffer, 64, stdin);
+    strncpy(filename, filebuffer, strlen(filebuffer)-1);
+    filein = fopen(filename, "rt");
+    if (filein == NULL)
+        return 1;
 
-    for ( i = 0 ; i < STRQTY ; i++)
+    *filename = "";
+
+    fgets(filebuffer, 64, stdin);
+    strncpy(filename, filebuffer, strlen(filebuffer)-1);
+    fileout = fopen(filename, "wt");
+    if (fileout == NULL)
+        return 2;
+
+    leng = qtystr(filein);
+
+    storage = (char **)malloc(sizeof(char *) * leng);
+
+    for ( i = 0 ; i < leng ; i++)
     {
         storage[i] = (char *)malloc(sizeof(char) * STRLNG);
-        fgets( storage[i] , STRLNG , stdin);
-		//fputs( storage[i] , stdout);
+        fgets( storage[i] , STRLNG , filein);
     }
 
 	i = 0;
 	j = 0;
-	for (i = 0 ; i < STRQTY ; i++)
+	for (i = 0 ; i < leng ; i++)
 	{
-		for (j = i; j < STRQTY ; j++)
+		for (j = i; j < leng ; j++)
 		{
 			if (cmp(storage[i], storage[j]) == 1)
 				swp(&storage[i], &storage[j]);
 		}
 	}
 
-	for ( i = 0 ; i < STRQTY ; i++)
+	for ( i = 0 ; i < leng ; i++)
     {
-		fputs( storage[i] , stdout);
+		fputs( storage[i] , fileout);
     };
 
-    for ( i = 0 ; i < STRQTY ; i++)
+    fflush(fileout);
+    fclose(filein);
+    fclose(fileout);
+
+
+    for ( i = 0 ; i < leng ; i++)
     {
         free(storage[i]);
     }
