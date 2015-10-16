@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-//#include <unistd.h>
+
 #define SIZE 120000
 
 void input( int* a ){
@@ -64,52 +64,6 @@ void bsort( int* a , int leng ){
     }
 }
 
-/*void qsort( int* array , int first , int last){
-
-    int i = first, j = last, base = array[(first + last) /2];
-    out(array, first, last);
-    printf("base [%d] = %d\n",(first + last) /2,base);
-    while ( i <= (j-1) ) {
-        printf("loop\n");
-        while ((*( array + i ) < base) && ((i+1) < j)) i++;
-        printf("move right done\n");
-        while ((*(array + j) > base) && (i < (j-1))) j--;
-        printf("move left done\n");
-        printf("(i,j)=(%d,%d)\n", i, j);
-
-        if ( i <= j ) {
-            if (array[i] > array[j])
-                grswp ( array + i , array + j);
-            printf("swaped\n");
-            out(array,first,last);
-            if ((i+1) < (j-1))
-            {
-                i++;
-                j--;
-            }
-            printf("(i,j)=(%d,%d)\n", i, j);
-        }
-    }
-    out(array,first,last);
-    printf("(i,j)=(%d,%d)\n", i, j);
-    printf("done\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-
-  /*  if ( j < last )
-    {
-        printf("call %d-%d\n",j,last);
-        qsort(array, j , last);
-    }
-    if ( i > first )
-    {
-        printf("call %d-%d\n",first,i);
-        qsort(array , first , i);
-    }
-}
-virtualbox */
-
 int insort(int *Array, int ArraySize){
    double dKey;
    int i, j;
@@ -132,7 +86,6 @@ int main() {
     long long int clk0 , clk1 , clk2;
     int array[SIZE], array2[SIZE];
     int i = 0;
-    //printf("%lld\n",time(NULL));
 
     input(array);
     for (i = 0; i < SIZE ; i++)
@@ -142,11 +95,8 @@ int main() {
     clk1 = time(NULL);
     qusort( array , 1 , SIZE - 1);
     clk2 = time(NULL);
-    //printf("\n%lld\n%lld\n%lld\n", clk0, clk1, clk2);
     printf("Time for InSort = %lg \n",difftime(clk1, clk0));
     printf("Time for QuSort = %lld \n",difftime(clk2, clk1));
-    //out( array, 0, SIZE);
-    //printf("\n");
-    //out( array2, 0, SIZE);
+
     return 0;
     }
