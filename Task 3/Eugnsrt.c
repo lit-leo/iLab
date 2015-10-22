@@ -21,7 +21,7 @@ int cmp(char *a,char *b)
 		i++;
 	}
 
-	if ( (a[i] == '\0') && (b[i] != '\0') )
+    if ( (a[i] == '\0') && (b[i] != '\0') )
 		return -1;
 	if ( (a[i] != '\0') && (b[i] == '\0') )
 		return 1;
@@ -44,10 +44,10 @@ int qtystr(FILE *f)
     char s[256];
 
     while (fgets( s , 256 , f) != NULL)
-       {
+        {
             ++leng;
         };
-        rewind(f);
+    rewind(f);
     return leng;
 }
 
@@ -96,12 +96,12 @@ int main()
 	for ( i = 0 ; i < leng ; i++)
     {
 		fputs( storage[i] , fileout);
+
     };
 
     fflush(fileout);
     fclose(filein);
     fclose(fileout);
-
 
     for ( i = 0 ; i < leng ; i++)
     {
@@ -111,3 +111,4 @@ int main()
 
     return 0;
 }
+
