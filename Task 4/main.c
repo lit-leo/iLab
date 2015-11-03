@@ -8,7 +8,7 @@ int main()
     
     double k;
     ctor(&a, 1, 10);
-    stack_dump(a);
+    dump(a);
     push(&a, 2);
     dump(a);
     push(&a, 4);
