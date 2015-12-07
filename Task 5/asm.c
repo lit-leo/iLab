@@ -24,7 +24,7 @@ enum commands {
     cmd_dec = 16,  //Decreases certain register by 1
     cmd_mov_c = 17,//Moves constant to certain reister. Ex* mov ax 7
     cmd_mov_r = 18,//Moves value from 2nd reg to 1st. Ex* mov ax bx <==> ax = bx
-    cmd_label = 19,//Showes, that following expression is an adress. In .bin file it will be seen as: *null* *null* *null* *null*
+    cmd_label = 19,//Showes, that following expression is an adress. In .bin file it will be seen as: 19 <number of label> *null* *null* *null*
     cmd_jmp = 20, //Jumps on label. Ex* jmp #1
     cmd_je_r = 21,//Jumps on label if value in register equals to zero. Ex* je ax #1
     cmd_jne_r = 22,//Jumps on label if value in register DOES NOT equal to zero. Ex* jne ax #1
