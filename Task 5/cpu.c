@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     int memleng = 0, ip = 0;
     char answ[MAX_SIZE];
     stack_s stack, call_stack;
-    double reg[5] = {0,0,0,0,}, temp = 0;    
+    double reg[5] = {0,0,0,0,0}, temp = 0;    
 
     FILE *filein = NULL;
     filein = fopen(argv[1], "rt");
@@ -78,101 +78,101 @@ int main(int argc, char* argv[])
     printf("1\n");
     ip = 0;
 
-    while ((ip < memleng) && (mem[ip] != 27))
+    while ((ip < memleng) && (mem[ip] != cmd_end))
     {
         switch((int)mem[ip])
         {
             case cmd_push_c:
             push(&stack, mem[ip+1]);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_push_r:
             push(&stack, reg[(int)mem[ip+1]]);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_pop_c:
             pop(&stack);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_pop_r:
             reg[(int)mem[ip+1]] = pop(&stack);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_in:
             scanf("%lg", &temp);
             push(&stack, temp);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_out:
             temp = pop(&stack);
             printf("%lg\n", temp);
             push(&stack, temp);
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_add_c:
             push(&stack, pop(&stack) + pop(&stack));
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_sub_c:
             push(&stack, -1*pop(&stack) + pop(&stack));
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_mul_c:
             push(&stack, pop(&stack) * pop(&stack));
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_div_c:
             push(&stack, 1/pop(&stack) * pop(&stack));
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_add_r:
             reg[(int)mem[ip+1]] = reg[(int)mem[ip+2]] + reg[(int)mem[ip+3]];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_sub_r:
             reg[(int)mem[ip+1]] = reg[(int)mem[ip+2]] - reg[(int)mem[ip+3]];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_mul_r:
             reg[(int)mem[ip+1]] = reg[(int)mem[ip+2]] * reg[(int)mem[ip+3]];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_div_r:
             reg[(int)mem[ip+1]] = reg[(int)mem[ip+2]] / reg[(int)mem[ip+3]];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_inc:
             reg[(int)mem[ip+1]] += 1;
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_dec:
             reg[(int)mem[ip+1]] -= 1;
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_mov_c:
             reg[(int)mem[ip+1]] = mem[ip+2];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_mov_r:
             reg[(int)mem[ip+1]] = reg[(int)mem[ip+2]];
-            ip += 4;
+            ip += 5;
             break;
 
             case cmd_jmp:
@@ -183,32 +183,32 @@ int main(int argc, char* argv[])
             if (reg[(int)mem[ip+1]] == 0)
                 ip = (int)mem[ip+2];
             else
-                ip += 4;
+                ip += 5;
             break;
 
             case cmd_jne_r:
             if (reg[(int)mem[ip+1]] != 0)
                 ip = (int)mem[ip+2];
             else
-                ip += 4;
+                ip += 5;
             break;
 
             case cmd_jl_r:
             if (reg[(int)mem[ip+1]] < reg[(int)mem[ip+2]])
                 ip = (int)mem[ip+3];
             else
-                ip +=4;
+                ip +=5;
             break;
 
             case cmd_jg_r:
             if (reg[(int)mem[ip+1]] > reg[(int)mem[ip+2]])
                 ip = (int)mem[ip+3];
             else
-                ip +=4;
+                ip +=5;
             break;
 
             case cmd_call:
-                push(&call_stack, ip + 4);
+                push(&call_stack, ip + 5);
                 ip = (int)mem[ip+1];
             break;
 
@@ -226,11 +226,11 @@ int main(int argc, char* argv[])
             fflush(stdin);
             fgets(answ, MAX_SIZE, stdin);
             if (answ[0] == 'Y')
-                {
-                    printf("Answ is %s\n", answ);
-                    ip += 4;
-                    break;
-                }
+            {
+                printf("Answ is %s\n", answ);
+                ip += 5;
+                break;
+            }
             else
             {   printf("Answ is %s\n", answ);
                 exit(2);
@@ -245,6 +245,8 @@ int main(int argc, char* argv[])
     printf("Dump of call_stack:\n");
     dump(call_stack);
 
+    free (mem);
+
     dtor(&stack);
     dtor(&call_stack);
     
@@ -252,4 +254,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-

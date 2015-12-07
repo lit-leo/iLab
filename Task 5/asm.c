@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #define MAX_SIZE 32
-#define WRT fwrite(record, sizeof(double), 4, fileout)
+#define WRT fwrite(record, sizeof(double), 5, fileout)
 
 enum commands {
     cmd_push_c = 1, //Push constant to the top of stack. Ex* push 7 
@@ -24,16 +24,16 @@ enum commands {
     cmd_dec = 16,  //Decreases certain register by 1
     cmd_mov_c = 17,//Moves constant to certain reister. Ex* mov ax 7
     cmd_mov_r = 18,//Moves value from 2nd reg to 1st. Ex* mov ax bx <==> ax = bx
-    cmd_label = 19,//Showes, that following expression is an adress. In .bin file it will be seen as: 19 *null* *null* *null*
+    cmd_label = 19,//Showes, that following expression is an adress. In .bin file it will be seen as: *null* *null* *null* *null*
     cmd_jmp = 20, //Jumps on label. Ex* jmp #1
     cmd_je_r = 21,//Jumps on label if value in register equals to zero. Ex* je ax #1
-    cmd_jne_r = 22,//Jumps on label if value in register NOT equals to zero. Ex* jne ax #1
+    cmd_jne_r = 22,//Jumps on label if value in register DOES NOT equal to zero. Ex* jne ax #1
     cmd_jl_r = 23,//Jumps on label if value in 1st reg is less then value in right. Ex* jl ax bx #2
     cmd_jg_r = 24,//Jumps on label if value in 1st reg is greater then value in right. Ex* jg ax bx #2
     cmd_call = 25,//Calls function from label. Ex* call #1
     cmd_ret = 26, //Returns from function. Ex* ret
     cmd_end = 27, //Shows, that end was reached. Ex* end 
-    };
+};
 
 enum registers {
     rax = 0,
@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
     char buffer[MAX_SIZE], *cmd = NULL;
     int leng = 0, i = 0, j = 0, label[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
     double value = 0, flag = 0; 
-    double record[4] = {0,0,0,0};
+    double record[5] = {0,0,0,0,0};
 
     FILE *filein = NULL, *fileout = NULL;
     filein = fopen(argv[1], "rt");
@@ -134,8 +134,11 @@ int main(int argc, char* argv[])
 
     printf("leng is %d\n", leng);
 
-    record[0] = leng * 4;
-    fwrite(record, sizeof(double), 1, fileout); //First goes quantity of sizeof(double) blocks for cpu memory.
+    leng = leng * 5;
+
+    printf("leng is %d\n", leng);
+    fwrite(&leng, sizeof(int), 1, fileout); //First goes quantity of sizeof(double) blocks for cpu memory.
+    leng = leng / 5;
 
     for (i = 0; i < leng; i++) //first check. Adding labels
     {
@@ -150,7 +153,7 @@ int main(int argc, char* argv[])
 
     for (i = 0; i < 10; i ++)
         printf("%d ",label[i]);
-
+    printf("\n");
     rewind(filein);
 
     for (i = 0; i < leng; i++) //second check. Adding commands
@@ -163,6 +166,8 @@ int main(int argc, char* argv[])
         if (cmd[0] == '#')
         {
             printf("Label %s met in line %d\n", cmd, i+1);
+            record[0] = cmd_label;
+            record[1] = cmd[1] - '0';
             WRT;
         }
         else  
@@ -234,6 +239,34 @@ int main(int argc, char* argv[])
         }
         else
 
+        if (strcmp(cmd, "add\n") == 0)
+        {
+            record[0] = cmd_add_c;
+            WRT;
+        }
+        else
+        
+        if (strcmp(cmd, "sub\n") == 0)
+        {
+            record[0] = cmd_sub_c;
+            WRT;
+        }
+        else
+
+        if (strcmp(cmd, "mul\n") == 0)
+        {
+            record[0] = cmd_mul_c;
+            WRT;
+        }
+        else
+
+        if (strcmp(cmd, "div\n") == 0)
+        {
+            record[0] = cmd_div_c;
+            WRT;
+        }
+        else
+
         if (strcmp(cmd, "add") == 0)
         {
             cmd = strtok(NULL, " ");
@@ -244,16 +277,8 @@ int main(int argc, char* argv[])
             else
             {
                 flag = regnum(cmd);
-                if (flag == -2)
-                    printf("Invalid command in line %d. Expected add\n", i+1);
-                else
-
-                if (flag == -1)
-                {
-                    record[0] = cmd_add_c;
-                    record[1] = atof(cmd);
-                    WRT;                  
-                }
+                if (flag < 0)
+                    printf("Invalid command in line %d. Expected add with registers.\n", i+1);
                 else
                 {
                     record[0] = cmd_add_r;
@@ -263,7 +288,7 @@ int main(int argc, char* argv[])
                     cmd = strtok(NULL, " ");
                     printf("Met %s\n", cmd);
                     if (regnum(cmd) < 0)
-                        printf("Error. Unexpected command in line %d. Expected add.\n", i+1);
+                        printf("Error. Unexpected command in line %d. Expected add with registers.\n", i+1);
                     else
                         record[j+2] = regnum(cmd);
                     }
@@ -280,20 +305,12 @@ int main(int argc, char* argv[])
             printf("Met %s\n", cmd);
 
             if (cmd == NULL)
-                printf("Error. Unexpected command in line %d. Expected sub.\n", i+1);
+                printf("Error. Unexpected command in line %d. Expected sub with registers.\n", i+1);
             else
             {
                 flag = regnum(cmd);
-                if (flag == -2)
-                    printf("Invalid command in line %d. Expected sub\n", i+1);
-                else
-
-                if (flag == -1)
-                {
-                    record[0] = cmd_sub_c;
-                    record[1] = atof(cmd);
-                    WRT;                 
-                }
+                if (flag < 0)
+                    printf("Invalid command in line %d. Expected sub with registers.\n", i+1);
                 else
                 {
                     record[0] = cmd_sub_r;
@@ -324,16 +341,8 @@ int main(int argc, char* argv[])
             else
             {
                 flag = regnum(cmd);
-                if (flag == -2)
-                    printf("Invalid command in line %d. Expected mul\n", i+1);
-                else
-
-                if (flag == -1)
-                {
-                    record[0] = cmd_mul_c;
-                    record[1] = atof(cmd);
-                    WRT;                   
-                }
+                if (flag < 0)
+                    printf("Invalid command in line %d. Expected mul with registers.\n", i+1);
                 else
                 {
                     record[0] = cmd_mul_r;
@@ -364,16 +373,8 @@ int main(int argc, char* argv[])
             else
             {
                 flag = regnum(cmd);
-                if (flag == -2)
+                if (flag < 0)
                     printf("Invalid command in line %d. Expected div\n", i+1);
-                else
-
-                if (flag == -1)
-                {
-                    record[0] = cmd_div_c;
-                    record[1] = atof(cmd);
-                    WRT;                   
-                }
                 else
                 {
                     record[0] = cmd_div_r;
@@ -495,6 +496,7 @@ int main(int argc, char* argv[])
                 record[0] = cmd_jmp;
                 j = (cmd[1] - '0');
                 record[1] = label[j];
+                record[2] = j;
                 WRT;
             }
             else
@@ -522,6 +524,7 @@ int main(int argc, char* argv[])
                 record[1] = flag;
                 j = (cmd[1] - '0');
                 record[2] = label[j];
+                record[3] = j;
                 WRT;
             }
             else
@@ -548,6 +551,7 @@ int main(int argc, char* argv[])
                 record[1] = flag;
                 j = (cmd[1] - '0');
                 record[2] = label[j];
+                record[3] = j;
                 WRT;
             }
             else
@@ -588,6 +592,7 @@ int main(int argc, char* argv[])
                     {
                         j = (cmd[1] - '0');
                         record[3] = label[j];
+                        record[4] = j;
                         WRT;
                     }
                     else
@@ -630,6 +635,7 @@ int main(int argc, char* argv[])
                     {
                         j = (cmd[1] - '0');
                         record[3] = label[j];
+                        record[4] = j;
                         WRT;
                     }
                     else
@@ -652,6 +658,7 @@ int main(int argc, char* argv[])
                 record[0] = cmd_call;
                 j = (cmd[1] - '0');
                 record[1] = label[j];
+                record[2] = j;
                 WRT;
             }
             else
@@ -661,14 +668,14 @@ int main(int argc, char* argv[])
         }
         else
 
-        if (strcmp(cmd, "ret\n") == 0)
+        if ((strcmp(cmd, "ret\n") == 0) || (strcmp(cmd, "ret") == 0))
         {
             record[0] = cmd_ret;
             WRT;
         }
         else
 
-        if (strcmp(cmd, "end\n") == 0)
+        if ((strcmp(cmd, "end\n") == 0) || (strcmp(cmd, "end") == 0))
         {
             record[0] = cmd_end;
             WRT;
@@ -683,6 +690,7 @@ int main(int argc, char* argv[])
     record[1] = 0;
     record[2] = 0;
     record[3] = 0;
+    record[4] = 0;
     j = 0;
     }
     fclose(filein);
