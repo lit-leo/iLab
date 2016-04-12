@@ -1,7 +1,8 @@
 #include "vector.h"
+#include "exeption.h"
 #include <iostream>
 
-int CVector::m_dim = 1;
+int CVector::m_dim = 2;
 
 int main(int argc, char const *argv[])
 {
@@ -10,22 +11,22 @@ int main(int argc, char const *argv[])
     double c;
     try
     {
-        for (int i = 0; i < 1; ++i)
-        {
-            a[i] = 5;
-            b[i] = 5;
-        }
-        //std::cout << "/*/*/*/*/*/*/\n";/**/
-        //std::cout << b[0] << std::endl;
-        c = b * a;
-        std::cout << "a*b = " << a * b << " len = "<< a.len() << " " << b.len() << std::endl;
-        c = a ^ b;
-        //b += a;
-        //b = b * 10.0;
-        //b = b - a * 10.0;
-        std::cout << "cos" << c << std::endl;
+    c = 0;
+    //CVector d(2);
+    a[0] = 3;
+    b[0] = 3;
+    a[1] = 3;
+    b[1] = 3;
+    c = a ^ b;
+    std::cout << a.len() << std::endl;
     }
-    catch (std::exeption& e)
+    catch (CException &e)
+    {
+        std::cout << "Exeption cought: " << e.what();
+        std::cout << " in " << e.where() << std::endl;
+
+        return e.exit_code();
+    }
 
     return 0;
 }
