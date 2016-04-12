@@ -1,12 +1,24 @@
 #include "vector.h"
+#include "vector.cpp"
 #include "exeption.h"
 #include <iostream>
 
-int CVector::m_dim = 2;
+template <class T> int CVector<T>::m_dim = 2;
 
 int main(int argc, char const *argv[])
 {
-    CVector a;
+    try
+    {
+        CVector<int> a;
+        CVector<int> b;
+        a[0] = 1;
+        a[1] = 0;
+        b[0] = 3;
+        b[1] = 9;
+        b -= a;
+        std::cout << b;
+    }
+    /*CVector a;
     CVector b;
     double c;
     try
@@ -19,7 +31,7 @@ int main(int argc, char const *argv[])
     b[1] = 3;
     c = a ^ b;
     std::cout << a.len() << std::endl;
-    }
+    }*/
     catch (CException &e)
     {
         std::cout << "Exeption cought: " << e.what();

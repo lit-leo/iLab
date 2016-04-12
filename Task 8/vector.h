@@ -2,37 +2,39 @@
 #define vector_h
 #include <iostream>
 
-class CVector
+template <class T> class CVector
 {
 public:
-    double *m_coord; //as a debug option, it should be private in relize
+    T* m_coord; //as a debug option, it should be private in relize
     static int m_dim;
 
     CVector();
     CVector(int range);
-    CVector(const CVector& that);
+    CVector(const CVector<T>& that);
     ~CVector();
 
 
-    const double& operator[] (int index) const;
+    const T& operator[] (int index) const;
     
-    double& operator[] (int index);
+    T& operator[] (int index);
 
-    CVector& operator+= (const CVector& right);
+    CVector<T>& operator+= (const CVector& right);
 
-    CVector operator+ (const CVector& right);
-    
-    CVector operator* (double number);
-    
-    double operator* (const CVector& right);
-    
-    CVector operator- (const CVector& right);
-    
-    double operator^ (const CVector& right);
+    CVector<T> operator+ (const CVector& right);
 
-    CVector& operator= (const CVector& right);
+    CVector<T>& operator-= (const CVector& right);
 
-    friend std::ostream& operator<< (std::ostream& os, const CVector& vect);
+    CVector<T> operator- (const CVector& right);
+
+    CVector<T> operator* (double number);
+
+    T operator* (const CVector& right);
+    
+    T operator^ (const CVector& right);
+
+    CVector<T>& operator= (const CVector& right);
+
+    template <T> friend std::ostream& operator<< (std::ostream& os, const CVector<T>& vect);
 
     const double len () const;
 };
